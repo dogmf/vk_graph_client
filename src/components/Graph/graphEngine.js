@@ -3,9 +3,11 @@ import * as d3 from "d3";
 // Не typescript, ибо есть много нюансов сопряжения с d3.
 // За основу взята работа с просторов интернета https://github.com/ninjaconcept/d3-force-directed-graph/blob/master/example/4-dynamic-updates.html
 
-const MANY_BODIES_FORCE = -300; // -500
-const LINK_FORCE = 0.07; // 0.2
-const COLLISION_FORCE_RADIUS = 25; // null
+const MANY_BODIES_FORCE = -300;
+const LINK_FORCE = 0.07;
+const NODE_RADIUS = 25; // От размера аватарки
+const NODE_BORDER_SIZE = 1;
+const COLLISION_FORCE_RADIUS = NODE_RADIUS + NODE_BORDER_SIZE + 2; // null
 
 export const createGraph = (container, config = {}) => {
   let { onNodeClick } = config;
@@ -119,16 +121,15 @@ export const createGraph = (container, config = {}) => {
       .call(dragDrop)
       .style("cursor", (user) => (user.is_closed ? "not-allowed" : "pointer"))
       .on("click", (e, user) => !user.is_closed && onNodeClick(user));
-    const imageSize = 50;
     nodeEnter
       .append("circle")
-      .attr("r", imageSize / 2 + 1)
-      .attr("cx", imageSize / 2)
-      .attr("cy", imageSize / 2)
+      .attr("r", NODE_RADIUS + NODE_BORDER_SIZE)
+      .attr("cx", NODE_RADIUS)
+      .attr("cy", NODE_RADIUS)
       .attr("fill", (user) => (user.is_closed ? "crimson" : "black"));
     nodeEnter
       .append("image")
-      .attr("width", imageSize)
+      .attr("width", NODE_RADIUS * 2)
       .attr("href", (user) => user.photo_50)
       .attr("clip-path", "url(#clip-circle)");
     nodeEnter.append("text").text((n) => n.screen_name);
@@ -149,16 +150,16 @@ export const createGraph = (container, config = {}) => {
         });
       linkElements
         .attr("x1", function (link) {
-          return link.source.x;
+          return link.source.x + NODE_RADIUS;
         })
         .attr("y1", function (link) {
-          return link.source.y;
+          return link.source.y + NODE_RADIUS;
         })
         .attr("x2", function (link) {
-          return link.target.x;
+          return link.target.x + NODE_RADIUS;
         })
         .attr("y2", function (link) {
-          return link.target.y;
+          return link.target.y + NODE_RADIUS;
         });
     });
 

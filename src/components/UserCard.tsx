@@ -1,4 +1,5 @@
 import React, { FC } from "react";
+import { Tag } from "@blueprintjs/core";
 import { VkUser } from "../lib/vkApi";
 
 type UserCardProps = {
@@ -19,6 +20,8 @@ const UserCard: FC<UserCardProps> = (props) => {
         }}
       />
       <div style={{ display: "flex", flexDirection: "column", gap: ".3em" }}>
+        {user.is_closed && <Tag intent="danger">Закрытый</Tag>}
+        {user.deactivated && <Tag intent="warning">Заблокирован</Tag>}
         <div>{user.last_name}</div>
         <div>{user.first_name}</div>
       </div>

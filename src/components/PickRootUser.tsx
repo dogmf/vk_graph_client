@@ -64,7 +64,7 @@ const PickRootUser: FC<PickRootUserProps> = (props) => {
         </div>
         {user && (
           <div>
-            <Button onClick={pickHandler}>
+            <Button onClick={pickHandler} disabled={user.is_closed || user.deactivated}>
               <UserCard user={user} />
             </Button>
           </div>
