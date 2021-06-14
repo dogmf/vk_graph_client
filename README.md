@@ -1,46 +1,58 @@
-# Getting Started with Create React App
+# Граф друзей в вк
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+> Для запуска необходимо создать и зарегистрировать приложение в вк. Инструкция прилагается.
 
-## Available Scripts
+## Порядок установки и запуска
 
-In the project directory, you can run:
+1\. Установить модули
 
-### `npm start`
+    npm i
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+2\. Настроить прокси
+1. Авторизоваться в вк.
+2. Зарегистрировать приложение https://vk.com/editapp?act=create. Выбираем Standalone.
+3. После создания перейти в настройки приложения и взять от туда "Сервисный ключ доступа"
+4. Создать фаил `proxyConfig.json` на основе `proxyConfig.example.json`
+5. Записать в поле `SERVICE_KEY` "Сервисный ключ доступа" из настроек.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+3\. Запустить
 
-### `npm test`
+    npm start
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+    
+## Работа приложения
 
-### `npm run build`
+При открытии веб-приложения первым делом появляется окно для ввода идентификаторв или никнейма пользователя, с которого начнется построение.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+*скриншот*
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+После выбора пользователя, на экран загружается выбранный пользователь и его друзья.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+*скриншот*
 
-### `npm run eject`
+Дальше есть возможность кликом по пользователю загрузить его друзей.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+*скриншот*
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Решения
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### Подключение к API VK
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Так как не было найдено библиотек для нормальной работы с апи VK без авторизации пользователей, решено было подключаться к API самостоятельно. Подключение из браузера напрямую к серверу vk, без колдовства, не возможно из-за кросс доменного запроса. Принят подход, работать через прокси. В текущем случае прокси настроено на сервере разработчика реакт приложения. При необходимости работать отдельно от режима отладки потребуется настроить отдельный прокси сервер.
 
-## Learn More
+### Используемые библиотеки
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+1. React - Основа приложения.
+2. blueprintjs - UI KIT.
+3. lodash - набор утилит для js.
+4. d3 - Библиотека для управления данными. Используется модуль для просчета графа.
+5. axios - Библиотека для работы с запросами.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Дальше:
+- Отладить верстку узлов графа
+- Добавить ограничения на закрытых пользователей
+   - при начале работы
+- фича - показывать только общих
+- фича - фильтр по полу
+- фича - загрузка нескольких слоев общих и компиляция
+- фича - подсветка связей при наведении
