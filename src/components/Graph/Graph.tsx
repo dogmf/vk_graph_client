@@ -1,7 +1,10 @@
 import React, { FC, useCallback, useEffect, useReducer, useState } from "react";
+import { ProgressBar } from "@blueprintjs/core";
 import vkApi, { VkUser } from "../../lib/vkApi";
 import { createGraph } from "./graphEngine";
 import _ from "lodash";
+import { loadGraph } from "../../lib/methods";
+import useGraph from "./useGraph";
 type GraphEngine = {
   setData: (nodes: VkUser[], links: GraphLink[]) => void;
 };
@@ -47,40 +50,68 @@ const graphDataReducer: GraphDataReducer = (
 
 const Graph: FC<GraphProps> = (props) => {
   let { rootUser } = props;
-
-  let [graph, setGraph] = useState<GraphEngine>();
-  let [graphData, setGraphData] = useReducer<GraphDataReducer>(
-    graphDataReducer,
-    {
-      links: [],
-      nodes: [],
-    }
-  );
+  let { users, graph, graphData, loading, status, loadGraphData } = useGraph();
+  let [graphEngine, setGraphEngine] = useState<GraphEngine>();
+  // let [graphData, setGraphData] = useReducer<GraphDataReducer>(
+  //   graphDataReducer,
+  //   {
+  //     links: [],
+  //     nodes: [],
+  //   }
+  // );
 
   const containerAppearance = useCallback((container) => {
     if (container !== null) {
-      setGraph(createGraph(container, { onNodeClick: clickHandler }));
+      setGraphEngine(createGraph(container, { onNodeClick: clickHandler }));
     }
   }, []);
   useEffect(() => {
-    if (graph && graphData) {
-      graph.setData(graphData.nodes, graphData.links);
+    if (graphEngine && graphData) {
+      graphEngine.setData(graphData.nodes, graphData.edges);
     }
-  }, [graph, graphData]);
+  }, [graphData]);
   useEffect(() => {
-    loadMore(rootUser);
-  }, []);
+    // loadMore(rootUser);
+    // loadGraph(rootUser.id, { depth: 2, onStatusChange: console.log });
+    loadGraphData(rootUser.id);
+  }, [rootUser.id]);
   const clickHandler = useCallback((user) => {
     loadMore(user);
   }, []);
 
   const loadMore = useCallback(async (parent: VkUser) => {
-    let { items: friends } = await vkApi.getFriends(parent.id);
-    setGraphData({ nodes: friends, parent });
+    // let { items: friends } = await vkApi.getFriends(parent.id);
+    // setGraphData({ nodes: friends, parent });
   }, []);
 
   return (
-    <svg style={{ width: "100%", height: "100%" }} ref={containerAppearance} />
+    <div className="full flex-column">
+      {loading && (
+        <div
+          style={{
+            position: "absolute",
+            right: 0,
+            bottom: 0,
+            left: 0,
+            top: 0,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "column",
+          }}
+        >
+          <div style={{ maxWidth: "100%", width: "400px" }}>
+            {status && <div>{status.text}</div>}
+            <ProgressBar intent="primary" animate value={status?.percent} />
+          </div>
+        </div>
+      )}
+      <svg
+        key={rootUser?.id}
+        style={{ width: "100%", height: "100%" }}
+        ref={containerAppearance}
+      />
+    </div>
   );
 };
 

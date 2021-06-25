@@ -15,7 +15,7 @@ export type VkUser = {
 
 let vkApi = axios.create({
   baseURL: "/api",
-  timeout: 1000,
+  timeout: 5000,
   params: { v: API_VERSION },
 });
 

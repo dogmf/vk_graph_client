@@ -3,8 +3,8 @@ import * as d3 from "d3";
 // Не typescript, ибо есть много нюансов сопряжения с d3.
 // За основу взята работа с просторов интернета https://github.com/ninjaconcept/d3-force-directed-graph/blob/master/example/4-dynamic-updates.html
 
-const MANY_BODIES_FORCE = -300;
-const LINK_FORCE = 0.07;
+const MANY_BODIES_FORCE = -400;
+const LINK_FORCE = 0.01;
 const NODE_RADIUS = 25; // От размера аватарки
 const NODE_BORDER_SIZE = 1;
 const COLLISION_FORCE_RADIUS = NODE_RADIUS + NODE_BORDER_SIZE + 2; // null

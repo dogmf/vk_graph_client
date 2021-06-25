@@ -12,10 +12,11 @@ import UserCard from "./UserCard";
 
 type PickRootUserProps = {
   onUserPick: (user: VkUser) => void;
+  onClose: () => void;
 };
 
 const PickRootUser: FC<PickRootUserProps> = (props) => {
-  let { onUserPick } = props;
+  let { onUserPick, onClose } = props;
 
   let [userId, setUserId] = useState<string>("");
   let [loading, setLoading] = useState(false);
@@ -42,12 +43,7 @@ const PickRootUser: FC<PickRootUserProps> = (props) => {
   }, [userId]);
 
   return (
-    <Dialog
-      title="Выбор начального пользователя"
-      isOpen
-      canEscapeKeyClose={false}
-      canOutsideClickClose={false}
-    >
+    <Dialog title="Выбор начального пользователя" isOpen onClose={onClose}>
       <div style={{ display: "grid", gap: "2em", padding: "2em" }}>
         <div>
           <ControlGroup>
@@ -64,7 +60,10 @@ const PickRootUser: FC<PickRootUserProps> = (props) => {
         </div>
         {user && (
           <div>
-            <Button onClick={pickHandler} disabled={user.is_closed || user.deactivated}>
+            <Button
+              onClick={pickHandler}
+              disabled={user.is_closed || user.deactivated}
+            >
               <UserCard user={user} />
             </Button>
           </div>
